@@ -38,7 +38,10 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.only(right: 10.0),
             child: IconButton(
               icon: Icon(Icons.logout),
-              onPressed: () {},
+              onPressed: () async {
+                await _auth.signOut();
+                Navigator.pop(context);
+              },
             ),
           ),
         ],
