@@ -23,8 +23,9 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 20.0,
             ),
             TextField(
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                hintText: 'Enter your Name',
+                hintText: 'Enter your Email',
               ),
             ),
             TextField(
