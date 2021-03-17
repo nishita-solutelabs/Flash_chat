@@ -1,14 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override
   _WelcomeScreenState createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController animationController;
+  Animation animation;
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+      duration: Duration(seconds: 10),
+      vsync: this,
+    );
+    // animation =
+    //     CurvedAnimation(parent: animationController, curve: Curves.linear);
+    animationController.forward();
+
+    animation = ColorTween(begin: Colors.pink[900], end: Colors.pink[300])
+        .animate(animationController);
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        animationController.reverse(from: 1.0);
+      } else if (status == AnimationStatus.dismissed) {
+        animationController.forward();
+      }
+    });
+    animationController.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: animation.value,
+      //backgroundColor: Colors.pink[900].withOpacity(animationController.value),
       body: Padding(
         padding: const EdgeInsets.all(40.0),
         child: Column(
@@ -17,13 +55,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           children: [
             Row(
               children: [
-                Image(
-                  image: AssetImage('images/logo.png'),
-                  height: 100.0,
+                Hero(
+                  tag: 'logo',
+                  child: Image(
+                    image: AssetImage('images/logo.png'),
+                    height: 80.0,
+                    //height: animationController.value * 100,
+                    // height: animation.value * 100,
+                  ),
                 ),
-                Text(
-                  'Flash Chat',
-                  style: TextStyle(fontSize: 30.0),
+                TypewriterAnimatedTextKit(
+                  text: ['Flash Chat', 'Hello User!'],
+                  textStyle: TextStyle(
+                    fontSize: 40.0,
+                  ),
                 ),
               ],
             ),
